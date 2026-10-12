@@ -1,0 +1,97 @@
+# Platine — pile de production (VPS) : bot + Lavalink + PostgreSQL.
+# Démarrer : docker compose up -d   (variables lues depuis .env, voir .env.example)
+# Dev local : docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+# Aucun port n'est publié : le bot parle à Discord en sortant, Lavalink et Postgres ne sont joignables
+# que depuis les réseaux Docker du projet.
+
+name: platine
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  bot:
+    build: .
+    image: platine-bot:local
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Dans le compose, les services se joignent par leur nom (surcharge les valeurs « hôte » du .env).
+      LAVALINK_HOST: lavalink
+      LAVALINK_PORT: "2333"
+      DATABASE_URL: postgres://${POSTGRES_USER:-platine}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant dans .env}@postgres:5432/${POSTGRES_DB:-platine}
+      HEALTH_PORT: ${HEALTH_PORT:-8080}
+    depends_on:
+      lavalink:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    # Le HEALTHCHECK est défini dans le Dockerfile (GET /healthz, tâche 0.4).
+    mem_limit: 512m
+    logging: *logging
+    networks: [egress, backend]
+
+  lavalink:
+    # Image officielle ; 4.2.2 = dernière 4.2.x (DAVE depuis 4.2.0). Vérifiée le 2026-10-12.
+    image: ghcr.io/lavalink-devs/lavalink:4.2.2
+    restart: unless-stopped
+    environment:
+      # Lu par lavalink/application.yml (lavalink.server.password)
+      LAVALINK_SERVER_PASSWORD: ${LAVALINK_PASSWORD:?LAVALINK_PASSWORD manquant dans .env}
+      # Tas JVM plafonné (VPS 4 Go, risque R5) ; la limite du conteneur laisse ~256 Mo hors tas.
+      _JAVA_OPTIONS: -Xmx${LAVALINK_XMX:-768m}
+    volumes:
+      - ./lavalink/application.yml:/opt/Lavalink/application.yml:ro
+      # Plugins téléchargés au démarrage (ignorés par git). Sous Linux, le dossier doit appartenir
+      # à l'uid 322 de l'image : sudo mkdir -p lavalink/plugins && sudo chown 322:322 lavalink/plugins
+      - ./lavalink/plugins:/opt/Lavalink/plugins
+    # L'image n'embarque pas forcément curl : requête HTTP authentifiée via /dev/tcp de bash.
+    healthcheck:
+      test:
+        - CMD
+        - bash
+        - -c
+        - >-
+          exec 3<>/dev/tcp/127.0.0.1/2333 &&
+          printf 'GET /version HTTP/1.1\r\nHost: localhost\r\nAuthorization: %s\r\nConnection: close\r\n\r\n' "$$LAVALINK_SERVER_PASSWORD" >&3 &&
+          head -n 1 <&3 | grep -q ' 200'
+      interval: 15s
+      timeout: 5s
+      start_period: 60s
+      retries: 5
+    mem_limit: 1g
+    logging: *logging
+    networks: [egress]
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-platine}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant dans .env}
+      POSTGRES_DB: ${POSTGRES_DB:-platine}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    mem_limit: 512m
+    shm_size: 128m
+    logging: *logging
+    networks: [backend]
+
+volumes:
+  postgres-data:
+
+networks:
+  # Sortie Internet (Discord, YouTube) pour le bot et Lavalink.
+  egress:
+  # Réseau sans accès Internet : seule la base y est, avec le bot.
+  backend:
+    internal: true

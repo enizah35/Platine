@@ -1,0 +1,25 @@
+# Surcharges de développement (PC de Hugo, Docker Desktop + WSL2).
+# docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+# Ports publiés uniquement sur 127.0.0.1 : rien n'est exposé au réseau local.
+
+services:
+  bot:
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+    ports:
+      - "127.0.0.1:${HEALTH_PORT:-8080}:${HEALTH_PORT:-8080}"
+
+  lavalink:
+    # Permet aussi de lancer le bot hors conteneur (pnpm dev) contre ce Lavalink.
+    ports:
+      - "127.0.0.1:2333:2333"
+    environment:
+      # Logs plus bavards pour le spike DAVE (connexion voix, plugin youtube).
+      LOGGING_LEVEL_LAVALINK: DEBUG
+      LOGGING_LEVEL_DEV_LAVALINK_YOUTUBE: INFO
+
+  postgres:
+    ports:
+      - "127.0.0.1:5432:5432"
+    # Un conteneur seulement sur un réseau « internal » ne peut pas publier de port : on l'ajoute à egress en dev.
+    networks: [backend, egress]
