@@ -10,18 +10,28 @@
   "scripts": {
     "dev": "tsx watch src/main.ts",
     "start": "node dist/main.js",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-migrations.mjs",
     "lint": "biome check . && node scripts/check-domain-imports.mjs",
     "format": "biome check --write .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/adapters/db/migrate-cli.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
+    "@electric-sql/pglite": "^0.5.9",
     "@types/node": "^22.10.0",
+    "@vitest/coverage-v8": "3.2.7",
+    "drizzle-kit": "^0.31.11",
     "tsx": "^4.23.0",
     "typescript": "~5.9.3",
     "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.4",
+    "postgres": "^3.4.9"
   }
 }
