@@ -1,0 +1,113 @@
+# Configuration Lavalink 4.2.x pour Platine.
+# Monté en lecture seule dans /opt/Lavalink/application.yml (voir docker-compose.yml).
+# Référence : https://github.com/lavalink-devs/Lavalink/blob/master/LavalinkServer/application.yml.example
+
+server:
+  port: 2333
+  address: 0.0.0.0 # dans le conteneur ; aucun port publié en prod
+  http2:
+    enabled: false
+
+lavalink:
+  plugins:
+    # Source YouTube maintenue : https://github.com/lavalink-devs/youtube-source (1.18.2 = dernière, vérifiée le 2026-10-12).
+    # Téléchargée au démarrage depuis https://maven.lavalink.dev/releases vers /opt/Lavalink/plugins.
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.18.2"
+      snapshot: false
+  pluginsDir: "./plugins"
+
+  server:
+    # Fourni par la variable d'environnement LAVALINK_SERVER_PASSWORD (= LAVALINK_PASSWORD du .env).
+    password: "${LAVALINK_SERVER_PASSWORD}"
+    sources:
+      youtube: false # source native dépréciée : remplacée par le plugin youtube-source ci-dessous
+      soundcloud: true # repli éventuel, sans compte
+      http: false # inutile : la file ne stocke jamais d'URL audio ; activé, il exposerait l'IP du serveur
+      bandcamp: false
+      twitch: false
+      vimeo: false
+      nico: false
+      local: false
+    filters: # tous activés (volume, égaliseur, nightcore via timescale…)
+      volume: true
+      equalizer: true
+      karaoke: true
+      timescale: true
+      tremolo: true
+      vibrato: true
+      distortion: true
+      rotation: true
+      channelMix: true
+      lowPass: true
+    nonAllocatingFrameBuffer: false
+    bufferDurationMs: 400
+    frameBufferDurationMs: 5000
+    opusEncodingQuality: 10
+    resamplingQuality: LOW
+    trackStuckThresholdMs: 10000
+    useSeekGhosting: true
+    youtubePlaylistLoadLimit: 6
+    playerUpdateInterval: 5
+    youtubeSearchEnabled: true
+    soundcloudSearchEnabled: true
+    soundcloudFilterOutPreviewTracks: true
+    gc-warnings: true
+    timeouts:
+      connectTimeoutMs: 3000
+      connectionRequestTimeoutMs: 3000
+      socketTimeoutMs: 3000
+    # Reprise de session : en Lavalink v4, il n'y a PAS de clé serveur. C'est le client qui l'active
+    # pour sa session via PATCH /v4/sessions/{sessionId} {"resuming": true, "timeout": 60}
+    # (Shoukaku : options resume/resumeTimeout = 60). Lavalink garde alors les lecteurs 60 s après une
+    # coupure du WebSocket du bot. Voir https://lavalink.dev/api/rest#update-session
+
+plugins:
+  youtube:
+    enabled: true
+    allowSearch: true # ytsearch: et ytmsearch:
+    allowDirectVideoIds: true
+    allowDirectPlaylistIds: true
+    # Ordre recommandé par la doc du plugin (README youtube-source) : interrogés dans cet ordre.
+    # Si YouTube casse un client, essayer d'ajouter TVHTML5_SIMPLY (ajouté en 1.18.0, pas de playlists).
+    clients:
+      - MUSIC
+      - ANDROID_VR
+      - WEB
+      - WEBEMBEDDED
+
+    # --- DÉSACTIVÉ. Dernier recours seulement (risque R1), avec un compte Google JETABLE :
+    # --- l'OAuth peut faire bannir le compte. Ne jamais utiliser le compte personnel de Hugo.
+    # oauth:
+    #   enabled: true
+    #   # refreshToken: "${YOUTUBE_OAUTH_REFRESH_TOKEN}"
+    #   # skipInitialization: true
+
+    # --- DÉSACTIVÉ. poToken (clients WEB et WEBEMBEDDED uniquement), même risque ; inutile avec l'OAuth.
+    # pot:
+    #   token: "${YOUTUBE_PO_TOKEN}"
+    #   visitorData: "${YOUTUBE_VISITOR_DATA}"
+
+    # --- DÉSACTIVÉ. Serveur de déchiffrement distant (https://github.com/kikkia/yt-cipher), si les
+    # --- changements de cipher de YouTube cassent la lecture.
+    # remoteCipher:
+    #   url: "http://yt-cipher:8001"
+    #   password: "${YT_CIPHER_PASSWORD}"
+    #   userAgent: "platine"
+
+metrics:
+  prometheus:
+    enabled: false
+    endpoint: /metrics
+
+logging:
+  # Pas de fichier de log : sortie console uniquement, rotation assurée par le driver Docker json-file.
+  level:
+    root: INFO
+    lavalink: INFO
+  request:
+    enabled: true
+    includeClientInfo: true
+    includeHeaders: false
+    includeQueryString: true
+    includePayload: false
+    maxPayloadLength: 10000
