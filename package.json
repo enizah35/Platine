@@ -1,0 +1,42 @@
+{
+  "name": "platine",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-migrations.mjs",
+    "lint": "biome check . && node scripts/check-domain-imports.mjs",
+    "format": "biome check --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/adapters/db/migrate-cli.ts",
+    "deploy:commands": "tsx src/discord/deploy-commands.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@electric-sql/pglite": "^0.5.9",
+    "@types/node": "^22.10.0",
+    "@vitest/coverage-v8": "3.2.7",
+    "drizzle-kit": "^0.31.11",
+    "tsx": "^4.23.0",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "discord.js": "^14.27.0",
+    "drizzle-orm": "^0.45.4",
+    "pino": "^10.3.1",
+    "postgres": "^3.4.9",
+    "shoukaku": "4.3.0",
+    "zod": "^4.6.5"
+  }
+}

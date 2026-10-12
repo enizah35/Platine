@@ -1,0 +1,8 @@
+{
+  "loadType": "error",
+  "data": {
+    "message": "Something went wrong while looking up the track.",
+    "severity": "fault",
+    "cause": "java.lang.RuntimeException: Sign in to confirm you're not a bot"
+  }
+}

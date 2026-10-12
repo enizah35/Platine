@@ -1,0 +1,19 @@
+{
+  "command.play.description": "Play a song (text search)",
+  "command.play.option.query": "Title, artist… e.g. daft punk one more time",
+  "command.stop.description": "Stop playback and leave the voice channel",
+  "play.nowPlaying": "Now playing: **{title}** — {author} ({duration})",
+  "stop.done": "Playback stopped, see you soon.",
+  "stop.nothing": "Nothing is playing.",
+  "error.NOT_IN_VOICE": "Join a voice channel first.",
+  "error.NOT_FOUND": "Nothing found for \"{query}\".",
+  "error.UNPLAYABLE": "This track can't be played.",
+  "error.FORBIDDEN": "You're not allowed to do that.",
+  "error.QUEUE_EMPTY": "The queue is empty.",
+  "error.ENGINE_UNAVAILABLE": "The audio engine is unavailable right now, try again in a moment.",
+  "error.PLAYLIST_EXISTS": "A playlist with that name already exists.",
+  "error.PLAYLIST_NOT_FOUND": "Playlist not found.",
+  "error.generic": "Something went wrong, try again in a moment.",
+  "error.guildOnly": "This command only works in a server.",
+  "error.unknownCommand": "Unknown command."
+}

@@ -1,0 +1,22 @@
+# Tout ce qui n'est pas nécessaire au build de l'image du bot
+**/node_modules
+dist
+coverage
+.git
+.github
+.env
+.env.*
+!.env.example
+*.log
+docs
+tests
+scripts
+!scripts/copy-migrations.mjs
+lavalink
+missions
+Dockerfile
+.dockerignore
+docker-compose*.yml
+biome.json
+vitest.config.ts
+*.md
