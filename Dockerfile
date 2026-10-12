@@ -25,6 +25,8 @@ FROM base AS build
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm install --frozen-lockfile
 COPY tsconfig.json tsconfig.build.json ./
+# Copie des migrations SQL dans dist/ (appelé par `pnpm build`)
+COPY scripts/copy-migrations.mjs ./scripts/
 COPY src ./src
 RUN pnpm build
 

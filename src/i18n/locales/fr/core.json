@@ -1,0 +1,19 @@
+{
+  "command.play.description": "Joue un morceau (recherche par texte)",
+  "command.play.option.query": "Titre, artiste… ex. daft punk one more time",
+  "command.stop.description": "Arrête la lecture et quitte le salon vocal",
+  "play.nowPlaying": "Lecture : **{title}** — {author} ({duration})",
+  "stop.done": "Lecture arrêtée, à bientôt.",
+  "stop.nothing": "Rien n'est en cours de lecture.",
+  "error.NOT_IN_VOICE": "Rejoins d'abord un salon vocal.",
+  "error.NOT_FOUND": "Rien trouvé pour « {query} ».",
+  "error.UNPLAYABLE": "Ce morceau ne peut pas être lu.",
+  "error.FORBIDDEN": "Tu n'as pas le droit de faire ça.",
+  "error.QUEUE_EMPTY": "La file est vide.",
+  "error.ENGINE_UNAVAILABLE": "Le moteur audio est indisponible pour le moment, réessaie dans un instant.",
+  "error.PLAYLIST_EXISTS": "Une playlist porte déjà ce nom.",
+  "error.PLAYLIST_NOT_FOUND": "Playlist introuvable.",
+  "error.generic": "Une erreur inattendue est survenue, réessaie dans un instant.",
+  "error.guildOnly": "Cette commande s'utilise sur un serveur.",
+  "error.unknownCommand": "Commande inconnue."
+}
