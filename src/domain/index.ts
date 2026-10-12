@@ -1,3 +1,5 @@
 // Domaine pur : aucune dépendance à Discord, Lavalink, la base ou le réseau.
-// Les contrats (ports, types, événements) arrivent en tâche 0.3 dans ./contracts.
-export const DOMAIN_VERSION = 0;
+export * from './contracts/index.js';
+export * from './events/event-bus.js';
+export * from './repository-rules.js';
+export * from './tracks/identity.js';
