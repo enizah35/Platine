@@ -11,6 +11,7 @@ coverage
 docs
 tests
 scripts
+!scripts/copy-migrations.mjs
 lavalink
 missions
 Dockerfile

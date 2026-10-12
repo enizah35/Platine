@@ -133,9 +133,8 @@ environ). Attendre que la colonne **STATUS** affiche `(healthy)` :
 | `lavalink` | `GET /version` authentifié | 127.0.0.1:2333 |
 | `bot` | `GET /healthz` | 127.0.0.1:8080 |
 
-> **Tant que la tâche 0.4 n'est pas livrée**, le bot n'a pas encore d'endpoint `/healthz` et s'arrête aussitôt :
-> le service `bot` redémarre en boucle ou reste `unhealthy`. C'est normal. Pour cette étape, on peut ne démarrer
-> que les deux autres : `docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d lavalink postgres`.
+> Le bot (tâche 0.4) a besoin d'un `.env` complet : sans `DISCORD_TOKEN` valide, il s'arrête et redémarre en
+> boucle. Pour ne tester que Lavalink et la base : `docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d lavalink postgres`.
 
 Vérifications manuelles (PowerShell ou WSL) :
 
@@ -146,7 +145,7 @@ curl -H "Authorization: <LAVALINK_PASSWORD>" http://127.0.0.1:2333/v4/info      
 curl -H "Authorization: <LAVALINK_PASSWORD>" "http://127.0.0.1:2333/v4/loadtracks?identifier=ytsearch:daft%20punk%20one%20more%20time"
 # Journal de Lavalink
 docker compose -f docker-compose.yml -f docker-compose.dev.yml logs -f lavalink
-# Bot (après la tâche 0.4)
+# Bot
 curl http://127.0.0.1:8080/healthz
 ```
 
@@ -235,6 +234,44 @@ alors sur `lavalink-client` (repli prévu dans l'ADR 0001).
 Supprimer ensuite le dossier `~/code/spike-dave`.
 
 ---
+
+## 5 bis. Tester le bot Platine (phase 0)
+
+Critère de la tâche 0.4 : `/play` joue un morceau en moins de 5 s, et `/healthz` reflète l'état de Lavalink.
+
+1. **`.env` rempli** (§3) : `DISCORD_TOKEN`, `DISCORD_CLIENT_ID`, `DISCORD_GUILD_ID` de **Platine Dev**,
+   `LAVALINK_PASSWORD`, `POSTGRES_PASSWORD`, `DATABASE_URL`. Si une valeur manque, le bot affiche la liste des
+   variables en cause et s'arrête (`docker compose … logs bot`).
+2. **Enregistrer les slash commands** sur le serveur de test (une fois, puis à chaque nouvelle commande) :
+   ```bash
+   pnpm install
+   pnpm deploy:commands      # « 2 commande(s) enregistrée(s) … : /play, /stop »
+   ```
+3. **Démarrer la pile** (le bot applique les migrations de la base au démarrage) :
+   ```bash
+   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+   docker compose -f docker-compose.yml -f docker-compose.dev.yml ps        # les 3 services (healthy)
+   docker compose -f docker-compose.yml -f docker-compose.dev.yml logs -f bot
+   ```
+4. **Dans Discord** : rejoindre le salon vocal du serveur de test, puis taper
+   `/play daft punk one more time`. Le bot rejoint le salon et la musique doit démarrer **en moins de 5 s**.
+   `/stop` arrête et fait quitter le salon. Hors d'un salon vocal, `/play` répond « Rejoins d'abord un salon vocal. »
+5. **Santé** :
+   ```bash
+   curl -i http://127.0.0.1:8080/healthz    # 200 {"status":"ok","checks":{"discord":true,"lavalink":true,"database":true}}
+   docker compose -f docker-compose.yml -f docker-compose.dev.yml stop lavalink
+   curl -i http://127.0.0.1:8080/healthz    # 503 … "lavalink":false  (quelques secondes après l'arrêt)
+   docker compose -f docker-compose.yml -f docker-compose.dev.yml start lavalink
+   curl -i http://127.0.0.1:8080/healthz    # de nouveau 200 (≤ 1 min : le bot se reconnecte tout seul)
+   ```
+   `/readyz` répond 200 dès que le démarrage est terminé (migrations faites, connexion Discord établie).
+
+> Pendant que Lavalink est arrêté, `/play` répond « Le moteur audio est indisponible… ». Après son redémarrage,
+> la session Lavalink n'est pas reprise (Lavalink a été relancé) : relancer `/play` pour que la musique reparte.
+> La reprise automatique arrive en phase 1.
+
+En cas d'erreur 4017 / « E2EE/DAVE protocol required » dans les journaux de Lavalink : voir l'ADR 0001 (repli
+`lavalink-client`).
 
 ## 6. Problèmes fréquents
 
