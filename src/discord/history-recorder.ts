@@ -26,7 +26,8 @@ export class HistoryRecorder {
     this.unsubscribe = engine.on((e) => {
       // `replaced` est clos explicitement par `finish` avant de lancer le morceau suivant : l'événement
       // Lavalink arrive après et ne doit pas clore la nouvelle ligne.
-      if (e.type === 'trackEnd' && e.reason !== 'replaced') void this.finish(e.guildId, ENGINE_END_REASON[e.reason]);
+      if (e.type === 'trackEnd' && e.reason !== 'replaced')
+        void this.finish(e.guildId, ENGINE_END_REASON[e.reason]);
     });
   }
 

@@ -18,7 +18,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "tsx src/adapters/db/migrate-cli.ts"
+    "db:migrate": "tsx src/adapters/db/migrate-cli.ts",
+    "deploy:commands": "tsx src/discord/deploy-commands.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",

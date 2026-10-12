@@ -8,7 +8,12 @@ export interface ErrorLogger {
 }
 
 /** Traduit une erreur en réponse utilisateur (éphémère). Les erreurs non métier sont journalisées. */
-export function errorReply(e: unknown, locale: Locale, logger?: ErrorLogger, params: Params = {}): CommandReply {
+export function errorReply(
+  e: unknown,
+  locale: Locale,
+  logger?: ErrorLogger,
+  params: Params = {},
+): CommandReply {
   if (isDomainError(e)) {
     return { content: t(`error.${e.code}` as MessageKey, params, locale), ephemeral: true };
   }

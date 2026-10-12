@@ -1,10 +1,10 @@
-import { pino, type Logger } from 'pino';
+import { type DestinationStream, type Logger, type LoggerOptions, pino } from 'pino';
 
 export type { Logger };
 
 /** Logger JSON (pino) sur la sortie standard ; la rotation est faite par le driver Docker `json-file`. */
-export function createLogger(level: string, opts: { destination?: pino.DestinationStream } = {}): Logger {
-  const options: pino.LoggerOptions = {
+export function createLogger(level: string, opts: { destination?: DestinationStream } = {}): Logger {
+  const options: LoggerOptions = {
     level,
     base: { app: 'platine' },
     timestamp: pino.stdTimeFunctions.isoTime,

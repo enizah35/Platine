@@ -23,7 +23,10 @@ export type CommandDeps = PlayDeps & StopDeps;
 
 export function createRegistry(deps: CommandDeps): ReadonlyMap<string, CommandEntry> {
   const entries: CommandEntry[] = [
-    { name: playCommand.name, run: (ctx, o) => handlePlay(deps, { ...ctx, query: o.getString('query', true) }) },
+    {
+      name: playCommand.name,
+      run: (ctx, o) => handlePlay(deps, { ...ctx, query: o.getString('query', true) }),
+    },
     { name: stopCommand.name, run: (ctx) => handleStop(deps, ctx) },
   ];
   return new Map(entries.map((e) => [e.name, e]));

@@ -1,0 +1,21 @@
+{
+  "loadType": "track",
+  "data": {
+    "encoded": "QAAAFGBhQbmPwH8ENCODED",
+    "info": {
+      "identifier": "FGBhQbmPwH8",
+      "isSeekable": true,
+      "author": "Daft Punk",
+      "length": 322000,
+      "isStream": false,
+      "position": 0,
+      "title": "Daft Punk - One More Time (Official Video)",
+      "uri": "https://www.youtube.com/watch?v=FGBhQbmPwH8",
+      "artworkUrl": "https://i.ytimg.com/vi/FGBhQbmPwH8/maxresdefault.jpg",
+      "isrc": null,
+      "sourceName": "youtube"
+    },
+    "pluginInfo": {},
+    "userData": {}
+  }
+}

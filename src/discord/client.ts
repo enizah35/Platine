@@ -85,5 +85,7 @@ async function routeCommand(
 }
 
 function toPayload(r: CommandReply) {
-  return r.ephemeral ? { content: r.content, flags: MessageFlags.Ephemeral as const } : { content: r.content };
+  return r.ephemeral
+    ? { content: r.content, flags: MessageFlags.Ephemeral as const }
+    : { content: r.content };
 }

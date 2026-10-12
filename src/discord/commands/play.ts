@@ -90,7 +90,12 @@ export async function handlePlay(deps: PlayDeps, input: PlayInput): Promise<Comm
 }
 
 /** Enregistre le morceau et le début d'écoute. Un échec ici ne coupe pas la musique. */
-async function persist(deps: PlayDeps, input: PlayInput, track: CatalogTrack, startedAt: Date): Promise<void> {
+async function persist(
+  deps: PlayDeps,
+  input: PlayInput,
+  track: CatalogTrack,
+  startedAt: Date,
+): Promise<void> {
   try {
     const saved = await deps.tracks.upsert(track);
     const id = await deps.history.start({

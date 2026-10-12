@@ -70,7 +70,10 @@ export async function startHealthServer(
 ): Promise<HealthServer> {
   const server = createServer((req, res) => {
     const send = (status: number, body: unknown) => {
-      res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
+      res.writeHead(status, {
+        'content-type': 'application/json; charset=utf-8',
+        'cache-control': 'no-store',
+      });
       res.end(JSON.stringify(body));
     };
     if (req.method !== 'GET' && req.method !== 'HEAD') return send(405, { error: 'method not allowed' });

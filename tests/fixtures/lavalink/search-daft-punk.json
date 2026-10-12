@@ -1,0 +1,77 @@
+{
+  "loadType": "search",
+  "data": [
+    {
+      "encoded": "QAAAFGBhQbmPwH8ENCODED",
+      "info": {
+        "identifier": "FGBhQbmPwH8",
+        "isSeekable": true,
+        "author": "Daft Punk",
+        "length": 322000,
+        "isStream": false,
+        "position": 0,
+        "title": "Daft Punk - One More Time (Official Video)",
+        "uri": "https://www.youtube.com/watch?v=FGBhQbmPwH8",
+        "artworkUrl": "https://i.ytimg.com/vi/FGBhQbmPwH8/maxresdefault.jpg",
+        "isrc": null,
+        "sourceName": "youtube"
+      },
+      "pluginInfo": {},
+      "userData": {}
+    },
+    {
+      "encoded": "QAAAA2VpR8HahKcENCODED",
+      "info": {
+        "identifier": "A2VpR8HahKc",
+        "isSeekable": true,
+        "author": "Daft Punk - Topic",
+        "length": 320357,
+        "isStream": false,
+        "position": 0,
+        "title": "One More Time",
+        "uri": "https://www.youtube.com/watch?v=A2VpR8HahKc",
+        "artworkUrl": "https://i.ytimg.com/vi/A2VpR8HahKc/maxresdefault.jpg",
+        "isrc": null,
+        "sourceName": "youtube"
+      },
+      "pluginInfo": {},
+      "userData": {}
+    },
+    {
+      "encoded": "QAAAliveStream01ENCODED",
+      "info": {
+        "identifier": "liveStream01",
+        "isSeekable": false,
+        "author": "Lofi Station",
+        "length": 9223372036854775807,
+        "isStream": true,
+        "position": 0,
+        "title": "Daft Punk radio 24/7",
+        "uri": "https://www.youtube.com/watch?v=liveStream01",
+        "artworkUrl": "https://i.ytimg.com/vi/liveStream01/maxresdefault.jpg",
+        "isrc": null,
+        "sourceName": "youtube"
+      },
+      "pluginInfo": {},
+      "userData": {}
+    },
+    {
+      "encoded": "QAAAYQAbbkyH9xEENCODED",
+      "info": {
+        "identifier": "YQAbbkyH9xE",
+        "isSeekable": true,
+        "author": "Daft Punk Live",
+        "length": 412000,
+        "isStream": false,
+        "position": 0,
+        "title": "Daft Punk - One More Time (Live at Alive 2007)",
+        "uri": "https://www.youtube.com/watch?v=YQAbbkyH9xE",
+        "artworkUrl": "https://i.ytimg.com/vi/YQAbbkyH9xE/maxresdefault.jpg",
+        "isrc": null,
+        "sourceName": "youtube"
+      },
+      "pluginInfo": {},
+      "userData": {}
+    }
+  ]
+}

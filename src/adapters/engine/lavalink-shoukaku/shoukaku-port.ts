@@ -31,7 +31,10 @@ export interface ShoukakuPort {
   readonly nodes: ReadonlyMap<string, { readonly state: number }>;
   readonly connections: ReadonlyMap<string, { readonly channelId: string | null }>;
   readonly players: ReadonlyMap<string, PlayerPort>;
-  on(event: 'ready', listener: (name: string, lavalinkResume: boolean, libraryResume: boolean) => void): unknown;
+  on(
+    event: 'ready',
+    listener: (name: string, lavalinkResume: boolean, libraryResume: boolean) => void,
+  ): unknown;
   on(event: 'close', listener: (name: string, code: number, reason: string) => void): unknown;
   joinVoiceChannel(options: VoiceChannelOptions): Promise<PlayerPort>;
   leaveVoiceChannel(guildId: string): Promise<void>;

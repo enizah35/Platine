@@ -3,7 +3,10 @@ import { existsSync } from 'node:fs';
 import { z } from 'zod';
 
 const nonEmpty = (name: string) =>
-  z.string({ error: `${name} manquant` }).trim().min(1, { error: `${name} manquant ou vide` });
+  z
+    .string({ error: `${name} manquant` })
+    .trim()
+    .min(1, { error: `${name} manquant ou vide` });
 
 const port = (name: string, fallback: number) =>
   z.coerce
@@ -14,7 +17,9 @@ const port = (name: string, fallback: number) =>
     .default(fallback);
 
 const snowflake = (name: string) =>
-  nonEmpty(name).regex(/^\d{17,20}$/, { error: `${name} doit être un identifiant Discord (17 à 20 chiffres)` });
+  nonEmpty(name).regex(/^\d{17,20}$/, {
+    error: `${name} doit être un identifiant Discord (17 à 20 chiffres)`,
+  });
 
 /** Variables nécessaires pour enregistrer les commandes (`pnpm deploy:commands`). */
 export const discordEnvSchema = z.object({
